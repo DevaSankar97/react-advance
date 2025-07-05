@@ -19,7 +19,7 @@ function SearchUsers() {
     },[searchData])
     return (
         <>
-            <div className="d-flex justify-content-center align-items-center ">
+            <div className="d-flex justify-content-center align-items-center">
                 <div className="card">
                     <div className="card-body">
                         <div className="d-flex justify-content-space-between align-items-center mb-3">

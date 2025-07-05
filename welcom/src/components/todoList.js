@@ -30,7 +30,7 @@ function TodoList() {
     }
     return (
         <>
-            <div className="d-flex justify-content-center align-items-center ">
+            <div className="d-flex justify-content-center align-items-center">
                 <div className="card w-50">
                     <div className="card-body">
                         <div className="d-flex justify-content-space-between align-items-center mb-3">

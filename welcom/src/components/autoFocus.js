@@ -18,12 +18,12 @@ function AutoFocus() {
       passWord:''
     });
     ref.current.focus()
-    console.log(ref);
+    // console.log(ref);
   }
   return (
     <>
       {/* <h1>I'm a react welcome app</h1> */}
-      <div className="d-flex justify-content-center align-items-center ">
+      <div className="d-flex justify-content-center align-items-center">
         <div className="card">
           <div className="card-body">
             <h5 className="text-center mb-3">Login</h5>
