@@ -1,0 +1,2552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MERN Stack Mastery</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #1a2332;
+    --border: #1f2d45;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --mongo: #00ed64;
+    --express: #f59e0b;
+    --react: #38bdf8;
+    --node: #84cc16;
+    --system: #a78bfa;
+    --dsa: #f472b6;
+    --accent: #38bdf8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* SIDEBAR */
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-logo h2 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #38bdf8, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .sidebar-logo p { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+  .sidebar-section { margin-bottom: 8px; }
+
+  .sidebar-section-title {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 20px 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: var(--muted);
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(56,189,248,0.06); }
+
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .progress-mini {
+    margin-left: auto;
+    font-size: 0.68rem;
+    background: var(--surface2);
+    border-radius: 999px;
+    padding: 1px 7px;
+    color: var(--muted);
+  }
+
+  /* MAIN */
+  .main {
+    margin-left: 260px;
+    flex: 1;
+    padding: 32px;
+    max-width: calc(100% - 260px);
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0c1a3a 0%, #1a0a2e 100%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(56,189,248,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
+  .hero h1 span { background: linear-gradient(135deg, #38bdf8, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 600px; }
+
+  .hero-stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 20px;
+    text-align: center;
+  }
+
+  .stat-box .num { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+  .stat-box .lbl { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+  /* OVERALL PROGRESS */
+  .overall-progress {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+
+  .op-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .op-header h3 { font-size: 0.9rem; font-weight: 700; }
+  .op-header span { font-size: 0.82rem; color: var(--muted); }
+
+  .track-bars { display: flex; flex-direction: column; gap: 10px; }
+
+  .track-row { display: flex; align-items: center; gap: 12px; }
+  .track-label { font-size: 0.78rem; width: 100px; color: var(--muted); }
+  .track-bar { flex: 1; height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
+  .track-fill { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
+  .track-pct { font-size: 0.72rem; color: var(--muted); width: 32px; text-align: right; }
+
+  /* SECTION */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 { font-size: 1.3rem; font-weight: 800; }
+  .section-header p { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+
+  /* TOPIC CARDS */
+  .topic-grid { display: flex; flex-direction: column; gap: 16px; }
+
+  .topic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .topic-card:hover { border-color: #2a3f5f; }
+
+  .topic-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .topic-num {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .topic-num.done { background: #052e16; color: #86efac; }
+
+  .topic-title { font-size: 0.92rem; font-weight: 600; flex: 1; }
+
+  .topic-badges { display: flex; gap: 6px; }
+
+  .badge {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  .badge-hard { background: #450a0a; color: #fca5a5; }
+  .badge-medium { background: #431407; color: #fdba74; }
+  .badge-easy { background: #052e16; color: #86efac; }
+  .badge-concept { background: #1e1b4b; color: #a5b4fc; }
+  .badge-practical { background: #0c2a1e; color: #6ee7b7; }
+
+  .topic-toggle {
+    color: var(--muted);
+    font-size: 0.8rem;
+    transition: transform 0.2s;
+  }
+
+  .topic-toggle.open { transform: rotate(180deg); }
+
+  .topic-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .topic-body.open { display: block; }
+
+  /* CONTENT BLOCKS */
+  .content-block { margin-top: 16px; }
+
+  .block-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .explanation {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+  }
+
+  pre {
+    background: #060d1a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin-top: 8px;
+    color: #a5f3fc;
+  }
+
+  .key-points {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .kp {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+  }
+
+  .kp-icon { flex-shrink: 0; margin-top: 1px; }
+
+  .table-wrap { overflow-x: auto; margin-top: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th { background: var(--surface2); color: var(--muted); font-weight: 600; padding: 10px 14px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 10px 14px; border-top: 1px solid var(--border); color: #cbd5e1; vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .gotcha {
+    background: #1a0a00;
+    border: 1px solid #7c2d12;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    color: #fdba74;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+
+  .gotcha::before { content: '⚠️ Gotcha: '; font-weight: 700; }
+
+  .tip {
+    background: #0c1a2e;
+    border: 1px solid #1d4ed8;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    color: #93c5fd;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+
+  .tip::before { content: '💡 Pro Tip: '; font-weight: 700; }
+
+  .mark-done-btn {
+    margin-top: 16px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+
+  .mark-done-btn:hover { border-color: #86efac; color: #86efac; }
+  .mark-done-btn.done-btn { border-color: #86efac; color: #86efac; background: #052e16; }
+
+  /* MOBILE */
+  @media(max-width: 768px) {
+    .sidebar { width: 100%; position: static; height: auto; }
+    .main { margin-left: 0; max-width: 100%; padding: 16px; }
+    .layout { flex-direction: column; }
+    .hero h1 { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h2>MERN Mastery</h2>
+    <p>Complete curriculum · Senior level</p>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Overview</div>
+    <div class="nav-item active" onclick="showSection('home', this)">
+      <div class="nav-dot" style="background:#38bdf8"></div>
+      Dashboard
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Core Topics</div>
+    <div class="nav-item" onclick="showSection('javascript', this)">
+      <div class="nav-dot" style="background:#f59e0b"></div>
+      JavaScript Fundamentals
+      <span class="progress-mini" id="prog-js">0/6</span>
+    </div>
+    <div class="nav-item" onclick="showSection('react', this)">
+      <div class="nav-dot" style="background:#38bdf8"></div>
+      React
+      <span class="progress-mini" id="prog-react">0/8</span>
+    </div>
+    <div class="nav-item" onclick="showSection('node', this)">
+      <div class="nav-dot" style="background:#84cc16"></div>
+      Node.js
+      <span class="progress-mini" id="prog-node">0/7</span>
+    </div>
+    <div class="nav-item" onclick="showSection('express', this)">
+      <div class="nav-dot" style="background:#f59e0b"></div>
+      Express.js
+      <span class="progress-mini" id="prog-express">0/5</span>
+    </div>
+    <div class="nav-item" onclick="showSection('mongodb', this)">
+      <div class="nav-dot" style="background:#00ed64"></div>
+      MongoDB
+      <span class="progress-mini" id="prog-mongo">0/6</span>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Advanced</div>
+    <div class="nav-item" onclick="showSection('auth', this)">
+      <div class="nav-dot" style="background:#f472b6"></div>
+      Auth & Security
+      <span class="progress-mini" id="prog-auth">0/4</span>
+    </div>
+    <div class="nav-item" onclick="showSection('system', this)">
+      <div class="nav-dot" style="background:#a78bfa"></div>
+      System Design
+      <span class="progress-mini" id="prog-system">0/5</span>
+    </div>
+    <div class="nav-item" onclick="showSection('perf', this)">
+      <div class="nav-dot" style="background:#fb923c"></div>
+      Performance & DevOps
+      <span class="progress-mini" id="prog-perf">0/4</span>
+    </div>
+    <div class="nav-item" onclick="showSection('dsa', this)">
+      <div class="nav-dot" style="background:#f472b6"></div>
+      DSA for Interviews
+      <span class="progress-mini" id="prog-dsa">0/5</span>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- HOME -->
+  <div id="sec-home" class="section active">
+    <div class="hero">
+      <h1>Become a <span>MERN Stack Master</span></h1>
+      <p>A complete, structured curriculum covering every topic a senior MERN developer needs — from JavaScript fundamentals to system design. Work through each section, mark topics done, and track your progress.</p>
+      <div class="hero-stats">
+        <div class="stat-box"><div class="num">9</div><div class="lbl">Sections</div></div>
+        <div class="stat-box"><div class="num">50</div><div class="lbl">Topics</div></div>
+        <div class="stat-box"><div class="num">100+</div><div class="lbl">Code Examples</div></div>
+        <div class="stat-box"><div class="num" id="doneCount">0</div><div class="lbl">Completed</div></div>
+      </div>
+    </div>
+
+    <div class="overall-progress">
+      <div class="op-header">
+        <h3>Your Progress</h3>
+        <span id="overallPct">0% complete</span>
+      </div>
+      <div class="track-bars">
+        <div class="track-row">
+          <div class="track-label">JavaScript</div>
+          <div class="track-bar"><div class="track-fill" id="bar-js" style="width:0%;background:#f59e0b"></div></div>
+          <div class="track-pct" id="pct-js">0%</div>
+        </div>
+        <div class="track-row">
+          <div class="track-label">React</div>
+          <div class="track-bar"><div class="track-fill" id="bar-react" style="width:0%;background:#38bdf8"></div></div>
+          <div class="track-pct" id="pct-react">0%</div>
+        </div>
+        <div class="track-row">
+          <div class="track-label">Node.js</div>
+          <div class="track-bar"><div class="track-fill" id="bar-node" style="width:0%;background:#84cc16"></div></div>
+          <div class="track-pct" id="pct-node">0%</div>
+        </div>
+        <div class="track-row">
+          <div class="track-label">Express.js</div>
+          <div class="track-bar"><div class="track-fill" id="bar-express" style="width:0%;background:#f59e0b"></div></div>
+          <div class="track-pct" id="pct-express">0%</div>
+        </div>
+        <div class="track-row">
+          <div class="track-label">MongoDB</div>
+          <div class="track-bar"><div class="track-fill" id="bar-mongo" style="width:0%;background:#00ed64"></div></div>
+          <div class="track-pct" id="pct-mongo">0%</div>
+        </div>
+        <div class="track-row">
+          <div class="track-label">Auth</div>
+          <div class="track-bar"><div class="track-fill" id="bar-auth" style="width:0%;background:#f472b6"></div></div>
+          <div class="track-pct" id="pct-auth">0%</div>
+        </div>
+        <div class="track-row">
+          <div class="track-label">System Design</div>
+          <div class="track-bar"><div class="track-fill" id="bar-system" style="width:0%;background:#a78bfa"></div></div>
+          <div class="track-pct" id="pct-system">0%</div>
+        </div>
+        <div class="track-row">
+          <div class="track-label">Performance</div>
+          <div class="track-bar"><div class="track-fill" id="bar-perf" style="width:0%;background:#fb923c"></div></div>
+          <div class="track-pct" id="pct-perf">0%</div>
+        </div>
+        <div class="track-row">
+          <div class="track-label">DSA</div>
+          <div class="track-bar"><div class="track-fill" id="bar-dsa" style="width:0%;background:#f472b6"></div></div>
+          <div class="track-pct" id="pct-dsa">0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <div id="sec-javascript" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#1a1000">🟨</div>
+      <div>
+        <h2>JavaScript Fundamentals</h2>
+        <p>The foundation everything else is built on — master these first</p>
+      </div>
+    </div>
+    <div class="topic-grid">
+
+      <!-- TOPIC 1 -->
+      <div class="topic-card" id="card-js-1">
+        <div class="topic-header" onclick="toggleTopic('js-1')">
+          <div class="topic-num" id="num-js-1">1</div>
+          <div class="topic-title">Closures, Scope & the Execution Context</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span><span class="badge badge-concept">Concept</span></div>
+          <div class="topic-toggle" id="toggle-js-1">▼</div>
+        </div>
+        <div class="topic-body" id="body-js-1">
+          <div class="content-block">
+            <div class="block-title">What is a Closure?</div>
+            <div class="explanation">A closure is a function that <strong>remembers variables from its outer scope</strong> even after the outer function has finished executing. JavaScript creates a closure every time a function is created.</div>
+            <pre>function makeCounter() {
+  let count = 0; // this variable is "closed over"
+  return function() {
+    count++;
+    return count;
+  };
+}
+
+const counter = makeCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2
+// count is not accessible from outside, but the inner function remembers it</pre>
+          </div>
+          <div class="content-block">
+            <div class="block-title">Real Use Cases</div>
+            <div class="key-points">
+              <div class="kp"><span class="kp-icon">→</span><span><strong>Data privacy</strong> — hide implementation details (like private variables)</span></div>
+              <div class="kp"><span class="kp-icon">→</span><span><strong>Factory functions</strong> — create customized functions</span></div>
+              <div class="kp"><span class="kp-icon">→</span><span><strong>Memoization</strong> — cache results inside a closure</span></div>
+              <div class="kp"><span class="kp-icon">→</span><span><strong>Event handlers</strong> — retain access to outer state</span></div>
+            </div>
+          </div>
+          <div class="gotcha">Classic interview trap: using var in loops. var is function-scoped so all callbacks share the same variable. Use let (block-scoped) or an IIFE to fix.</div>
+          <pre>// ❌ All print 3
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+
+// ✅ Prints 0, 1, 2
+for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}</pre>
+          <button class="mark-done-btn" onclick="markDone('js-1', 'js', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <!-- TOPIC 2 -->
+      <div class="topic-card" id="card-js-2">
+        <div class="topic-header" onclick="toggleTopic('js-2')">
+          <div class="topic-num" id="num-js-2">2</div>
+          <div class="topic-title">Promises, async/await & Error Handling</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span><span class="badge badge-practical">Practical</span></div>
+          <div class="topic-toggle" id="toggle-js-2">▼</div>
+        </div>
+        <div class="topic-body" id="body-js-2">
+          <div class="content-block">
+            <div class="block-title">Promise States</div>
+            <div class="explanation">A Promise has 3 states: <strong>pending</strong>, <strong>fulfilled</strong>, or <strong>rejected</strong>. Once settled it never changes.</div>
+            <pre>// Promise chaining
+fetch('/api/user')
+  .then(res => res.json())
+  .then(user => fetch(`/api/posts/${user.id}`))
+  .then(res => res.json())
+  .catch(err => console.error(err)); // catches ANY error above
+
+// async/await — same thing, cleaner
+async function getUserPosts() {
+  try {
+    const res = await fetch('/api/user');
+    const user = await res.json();
+    const posts = await fetch(`/api/posts/${user.id}`);
+    return await posts.json();
+  } catch (err) {
+    console.error(err);
+  }
+}</pre>
+          </div>
+          <div class="content-block">
+            <div class="block-title">Promise.all vs Promise.allSettled vs Promise.race</div>
+            <pre>// Promise.all — runs in PARALLEL, fails if ANY fails
+const [users, posts] = await Promise.all([getUsers(), getPosts()]);
+
+// Promise.allSettled — runs all, never throws, gives status of each
+const results = await Promise.allSettled([getUsers(), getPosts()]);
+results.forEach(r => {
+  if (r.status === 'fulfilled') console.log(r.value);
+  else console.error(r.reason);
+});
+
+// Promise.race — resolves/rejects as soon as FIRST settles
+const result = await Promise.race([fetchData(), timeout(5000)]);</pre>
+          </div>
+          <div class="gotcha">await only works inside async functions. Forgetting await means you get a Promise object, not the value.</div>
+          <div class="tip">Use Promise.all for parallel independent calls. Never chain sequential awaits when calls don't depend on each other — it wastes time.</div>
+          <button class="mark-done-btn" onclick="markDone('js-2', 'js', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <!-- TOPIC 3 -->
+      <div class="topic-card" id="card-js-3">
+        <div class="topic-header" onclick="toggleTopic('js-3')">
+          <div class="topic-num" id="num-js-3">3</div>
+          <div class="topic-title">Event Loop, Call Stack & Microtasks</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span><span class="badge badge-concept">Concept</span></div>
+          <div class="topic-toggle" id="toggle-js-3">▼</div>
+        </div>
+        <div class="topic-body" id="body-js-3">
+          <div class="content-block">
+            <div class="block-title">How it works</div>
+            <div class="explanation">JavaScript is single-threaded. The event loop continuously checks if the call stack is empty, then pushes the next callback from the queue. Microtasks (Promises) run before macrotasks (setTimeout).</div>
+            <pre>console.log('1');
+
+setTimeout(() => console.log('2'), 0);
+
+Promise.resolve().then(() => console.log('3'));
+
+console.log('4');
+
+// Output: 1, 4, 3, 2
+// Sync first → microtasks (Promise) → macrotasks (setTimeout)</pre>
+          </div>
+          <div class="tip">This is why Promise callbacks always run before setTimeout even with 0ms delay — they go in the microtask queue which has higher priority.</div>
+          <button class="mark-done-btn" onclick="markDone('js-3', 'js', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <!-- TOPIC 4 -->
+      <div class="topic-card" id="card-js-4">
+        <div class="topic-header" onclick="toggleTopic('js-4')">
+          <div class="topic-num" id="num-js-4">4</div>
+          <div class="topic-title">Prototypes, this & ES6 Classes</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span><span class="badge badge-concept">Concept</span></div>
+          <div class="topic-toggle" id="toggle-js-4">▼</div>
+        </div>
+        <div class="topic-body" id="body-js-4">
+          <div class="content-block">
+            <div class="block-title">Prototype Chain</div>
+            <div class="explanation">Every JS object has a prototype. When you access a property, JS walks up the prototype chain until it finds it or hits null.</div>
+            <pre>// ES6 Class (syntactic sugar over prototypes)
+class Animal {
+  constructor(name) { this.name = name; }
+  speak() { return `${this.name} makes a noise.`; }
+}
+
+class Dog extends Animal {
+  speak() { return `${this.name} barks.`; }
+}
+
+const d = new Dog('Rex');
+console.log(d.speak()); // Rex barks.
+console.log(d instanceof Animal); // true</pre>
+          </div>
+          <div class="content-block">
+            <div class="block-title">The 'this' keyword — 4 rules</div>
+            <pre>// 1. Implicit binding — left of the dot
+obj.method() // this = obj
+
+// 2. Explicit binding
+fn.call(obj, arg1)
+fn.apply(obj, [args])
+const bound = fn.bind(obj)
+
+// 3. new binding
+const inst = new Constructor() // this = new object
+
+// 4. Arrow functions — inherit 'this' from enclosing scope
+const obj = {
+  name: 'test',
+  fn: function() {
+    const arrow = () => console.log(this.name); // this = obj ✅
+    arrow();
+  }
+};</pre>
+          </div>
+          <button class="mark-done-btn" onclick="markDone('js-4', 'js', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <!-- TOPIC 5 -->
+      <div class="topic-card" id="card-js-5">
+        <div class="topic-header" onclick="toggleTopic('js-5')">
+          <div class="topic-num" id="num-js-5">5</div>
+          <div class="topic-title">Debounce, Throttle & Memoization</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span><span class="badge badge-practical">Practical</span></div>
+          <div class="topic-toggle" id="toggle-js-5">▼</div>
+        </div>
+        <div class="topic-body" id="body-js-5">
+          <div class="content-block">
+            <div class="block-title">Debounce — wait until user stops</div>
+            <pre>function debounce(fn, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+// React usage — search input
+const handleSearch = useCallback(
+  debounce((val) => fetchResults(val), 500),
+  []
+);
+// API only called 500ms after user stops typing</pre>
+          </div>
+          <div class="content-block">
+            <div class="block-title">Throttle — at most once per interval</div>
+            <pre>function throttle(fn, limit) {
+  let lastCall = 0;
+  return function(...args) {
+    const now = Date.now();
+    if (now - lastCall >= limit) {
+      lastCall = now;
+      return fn.apply(this, args);
+    }
+  };
+}
+// Use for: scroll events, resize events, button spam prevention</pre>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <tr><th>Feature</th><th>Debounce</th><th>Throttle</th></tr>
+              <tr><td>Fires</td><td>After user STOPS for N ms</td><td>At most once every N ms</td></tr>
+              <tr><td>Use case</td><td>Search input, form validation</td><td>Scroll, resize, mouse move</td></tr>
+              <tr><td>Guarantees timing?</td><td>No — resets on each call</td><td>Yes — consistent rate</td></tr>
+            </table>
+          </div>
+          <button class="mark-done-btn" onclick="markDone('js-5', 'js', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <!-- TOPIC 6 -->
+      <div class="topic-card" id="card-js-6">
+        <div class="topic-header" onclick="toggleTopic('js-6')">
+          <div class="topic-num" id="num-js-6">6</div>
+          <div class="topic-title">Destructuring, Spread, Rest & Modern ES6+</div>
+          <div class="topic-badges"><span class="badge badge-easy">Easy</span><span class="badge badge-practical">Practical</span></div>
+          <div class="topic-toggle" id="toggle-js-6">▼</div>
+        </div>
+        <div class="topic-body" id="body-js-6">
+          <pre>// Destructuring
+const { name, age = 25 } = user; // default value
+const { address: { city } } = user; // nested
+const [first, , third] = array; // skip elements
+
+// Spread — expand iterable
+const merged = { ...obj1, ...obj2 }; // later keys win
+const copy = [...arr1, ...arr2];
+
+// Rest — collect remaining
+function sum(...nums) { return nums.reduce((a, b) => a + b, 0); }
+const { id, ...rest } = user; // rest = everything except id
+
+// Optional chaining & Nullish coalescing
+const city = user?.address?.city ?? 'Unknown';
+// ?? — only falls back if null/undefined (not 0 or '')</pre>
+          <button class="mark-done-btn" onclick="markDone('js-6', 'js', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- REACT -->
+  <div id="sec-react" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#001a2e">⚛️</div>
+      <div>
+        <h2>React</h2>
+        <p>From fundamentals to senior-level patterns and performance</p>
+      </div>
+    </div>
+    <div class="topic-grid">
+
+      <div class="topic-card" id="card-react-1">
+        <div class="topic-header" onclick="toggleTopic('react-1')">
+          <div class="topic-num" id="num-react-1">1</div>
+          <div class="topic-title">Controlled vs Uncontrolled Components</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-react-1">▼</div>
+        </div>
+        <div class="topic-body" id="body-react-1">
+          <div class="table-wrap"><table>
+            <tr><th></th><th>Controlled</th><th>Uncontrolled</th></tr>
+            <tr><td>Value managed by</td><td>React state</td><td>DOM via ref</td></tr>
+            <tr><td>How to read</td><td>useState</td><td>useRef().current.value</td></tr>
+            <tr><td>Use case</td><td>Forms with validation</td><td>File inputs, 3rd-party libs</td></tr>
+          </table></div>
+          <pre>// Controlled
+const [val, setVal] = useState('');
+&lt;input value={val} onChange={e => setVal(e.target.value)} /&gt;
+
+// Uncontrolled
+const ref = useRef();
+&lt;input ref={ref} /&gt;  // read ref.current.value on submit
+
+// ⚠️ value without onChange = READ-ONLY (user cannot type!)
+// Use defaultValue for "editable with initial value"
+&lt;input defaultValue="initial" /&gt;</pre>
+          <button class="mark-done-btn" onclick="markDone('react-1', 'react', 8)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-react-2">
+        <div class="topic-header" onclick="toggleTopic('react-2')">
+          <div class="topic-num" id="num-react-2">2</div>
+          <div class="topic-title">useEffect — Lifecycle, Deps & Cleanup</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-react-2">▼</div>
+        </div>
+        <div class="topic-body" id="body-react-2">
+          <pre>// Runs after every render
+useEffect(() => { ... });
+
+// Runs once (componentDidMount equivalent)
+useEffect(() => { ... }, []);
+
+// Runs when dep changes
+useEffect(() => { ... }, [userId]);
+
+// Cleanup (componentWillUnmount equivalent)
+useEffect(() => {
+  const sub = subscribe(userId);
+  return () => sub.unsubscribe(); // cleanup on unmount or before re-run
+}, [userId]);</pre>
+          <div class="gotcha">Never put async directly in useEffect. Create an inner async function and call it immediately.</div>
+          <pre>useEffect(() => {
+  async function load() {
+    const data = await fetchUser(id);
+    setUser(data);
+  }
+  load();
+}, [id]);</pre>
+          <button class="mark-done-btn" onclick="markDone('react-2', 'react', 8)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-react-3">
+        <div class="topic-header" onclick="toggleTopic('react-3')">
+          <div class="topic-num" id="num-react-3">3</div>
+          <div class="topic-title">useMemo, useCallback & React.memo</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span><span class="badge badge-practical">Practical</span></div>
+          <div class="topic-toggle" id="toggle-react-3">▼</div>
+        </div>
+        <div class="topic-body" id="body-react-3">
+          <div class="table-wrap"><table>
+            <tr><th>Hook</th><th>Caches</th><th>Use when</th></tr>
+            <tr><td>useMemo</td><td>A computed VALUE</td><td>Expensive calculations</td></tr>
+            <tr><td>useCallback</td><td>A FUNCTION reference</td><td>Passing callbacks to memoized children</td></tr>
+            <tr><td>React.memo</td><td>A COMPONENT render</td><td>Child re-renders unnecessarily</td></tr>
+          </table></div>
+          <pre>// useMemo — only recalculates when items changes
+const sorted = useMemo(() => [...items].sort(), [items]);
+
+// useCallback — stable function reference
+const handleClick = useCallback(() => {
+  doSomething(id);
+}, [id]);
+
+// React.memo — only re-renders if props change
+const Card = React.memo(({ user }) => &lt;div&gt;{user.name}&lt;/div&gt;);
+
+// ⚠️ React.memo is USELESS if you pass inline functions/objects
+// ❌ new object every render → Card always re-renders
+&lt;Card style={{ color: 'red' }} /&gt;
+// ✅ stable reference
+const style = useMemo(() => ({ color: 'red' }), []);</pre>
+          <button class="mark-done-btn" onclick="markDone('react-3', 'react', 8)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-react-4">
+        <div class="topic-header" onclick="toggleTopic('react-4')">
+          <div class="topic-num" id="num-react-4">4</div>
+          <div class="topic-title">Context API & State Management</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-react-4">▼</div>
+        </div>
+        <div class="topic-body" id="body-react-4">
+          <pre>// Create context
+const AuthContext = createContext(null);
+
+// Provider
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const value = useMemo(() => ({ user, setUser }), [user]); // memoize!
+  return &lt;AuthContext.Provider value={value}&gt;{children}&lt;/AuthContext.Provider&gt;;
+}
+
+// Consume
+function Profile() {
+  const { user } = useContext(AuthContext);
+  return &lt;div&gt;{user?.name}&lt;/div&gt;;
+}</pre>
+          <div class="tip">Split large contexts into smaller ones (AuthContext, ThemeContext, CartContext). A component only re-renders when its specific context changes.</div>
+          <div class="content-block">
+            <div class="block-title">When to use Redux / Zustand instead</div>
+            <div class="key-points">
+              <div class="kp"><span class="kp-icon">→</span>Complex state with many actions → Redux Toolkit</div>
+              <div class="kp"><span class="kp-icon">→</span>Lightweight global state → Zustand</div>
+              <div class="kp"><span class="kp-icon">→</span>Server state (API data) → React Query / TanStack Query</div>
+              <div class="kp"><span class="kp-icon">→</span>Simple shared state → Context API</div>
+            </div>
+          </div>
+          <button class="mark-done-btn" onclick="markDone('react-4', 'react', 8)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-react-5">
+        <div class="topic-header" onclick="toggleTopic('react-5')">
+          <div class="topic-num" id="num-react-5">5</div>
+          <div class="topic-title">Custom Hooks — Build Reusable Logic</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span><span class="badge badge-practical">Practical</span></div>
+          <div class="topic-toggle" id="toggle-react-5">▼</div>
+        </div>
+        <div class="topic-body" id="body-react-5">
+          <pre>// useFetch — reusable data fetching
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    fetch(url)
+      .then(r => r.json())
+      .then(d => { if (!cancelled) setData(d); })
+      .catch(e => { if (!cancelled) setError(e); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; }; // cleanup prevents state update on unmount
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+// useDebounce
+function useDebounce(value, delay) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debounced;
+}</pre>
+          <button class="mark-done-btn" onclick="markDone('react-5', 'react', 8)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-react-6">
+        <div class="topic-header" onclick="toggleTopic('react-6')">
+          <div class="topic-num" id="num-react-6">6</div>
+          <div class="topic-title">Code Splitting & Lazy Loading</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-react-6">▼</div>
+        </div>
+        <div class="topic-body" id="body-react-6">
+          <pre>// Route-based code splitting
+const Dashboard = React.lazy(() => import('./Dashboard'));
+const Profile = React.lazy(() => import('./Profile'));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/dashboard" element={&lt;Dashboard /&gt;} /&gt;
+        &lt;Route path="/profile" element={&lt;Profile /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;
+  );
+}</pre>
+          <div class="tip">Use React DevTools → Profiler to see bundle sizes. Then use webpack-bundle-analyzer to find what to split.</div>
+          <button class="mark-done-btn" onclick="markDone('react-6', 'react', 8)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-react-7">
+        <div class="topic-header" onclick="toggleTopic('react-7')">
+          <div class="topic-num" id="num-react-7">7</div>
+          <div class="topic-title">Virtualization for Large Lists</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span><span class="badge badge-practical">Practical</span></div>
+          <div class="topic-toggle" id="toggle-react-7">▼</div>
+        </div>
+        <div class="topic-body" id="body-react-7">
+          <div class="explanation">Rendering 10,000+ DOM nodes is slow. Virtualization renders only visible rows — the rest are recycled as the user scrolls.</div>
+          <pre>import { FixedSizeList } from 'react-window';
+
+function Row({ index, style }) {
+  return &lt;div style={style}&gt;Row {data[index].name}&lt;/div&gt;;
+}
+
+&lt;FixedSizeList
+  height={600}       // visible container height
+  itemCount={10000}  // total items
+  itemSize={50}      // each row height in px
+  width="100%"
+&gt;
+  {Row}
+&lt;/FixedSizeList&gt;</pre>
+          <div class="tip">For variable height rows use VariableSizeList. For grids use react-window's FixedSizeGrid.</div>
+          <button class="mark-done-btn" onclick="markDone('react-7', 'react', 8)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-react-8">
+        <div class="topic-header" onclick="toggleTopic('react-8')">
+          <div class="topic-num" id="num-react-8">8</div>
+          <div class="topic-title">Error Boundaries & Suspense</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-react-8">▼</div>
+        </div>
+        <div class="topic-body" id="body-react-8">
+          <pre>// Error Boundary — must be a class component
+class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    logErrorToService(error, info); // send to Sentry etc.
+  }
+
+  render() {
+    if (this.state.hasError) return &lt;h1&gt;Something went wrong.&lt;/h1&gt;;
+    return this.props.children;
+  }
+}
+
+// Usage — wrap around routes or risky components
+&lt;ErrorBoundary&gt;
+  &lt;Suspense fallback={&lt;Loader /&gt;}&gt;
+    &lt;LazyComponent /&gt;
+  &lt;/Suspense&gt;
+&lt;/ErrorBoundary&gt;</pre>
+          <button class="mark-done-btn" onclick="markDone('react-8', 'react', 8)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NODE -->
+  <div id="sec-node" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#0a1a00">🟢</div>
+      <div><h2>Node.js</h2><p>Event loop, streams, clustering, and production patterns</p></div>
+    </div>
+    <div class="topic-grid">
+
+      <div class="topic-card" id="card-node-1">
+        <div class="topic-header" onclick="toggleTopic('node-1')">
+          <div class="topic-num" id="num-node-1">1</div>
+          <div class="topic-title">Event Loop — All 6 Phases</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-node-1">▼</div>
+        </div>
+        <div class="topic-body" id="body-node-1">
+          <pre>// Phase order:
+// 1. timers        → setTimeout, setInterval callbacks
+// 2. pending I/O   → deferred I/O callbacks
+// 3. idle/prepare  → internal
+// 4. poll          → fetch new I/O (blocks here if empty)
+// 5. check         → setImmediate()
+// 6. close         → socket.on('close') etc.
+
+// Special queues (between EVERY phase):
+// process.nextTick() → runs FIRST before any phase
+// Promise.then()     → microtask, runs after nextTick
+
+setTimeout(() => console.log('setTimeout'), 0);
+setImmediate(() => console.log('setImmediate'));
+process.nextTick(() => console.log('nextTick'));
+Promise.resolve().then(() => console.log('promise'));
+
+// Output: nextTick → promise → setTimeout → setImmediate</pre>
+          <div class="content-block">
+            <div class="block-title">process.nextTick vs setImmediate</div>
+            <div class="table-wrap"><table>
+              <tr><th></th><th>process.nextTick()</th><th>setImmediate()</th></tr>
+              <tr><td>Runs</td><td>Before current phase ends</td><td>After poll phase (check)</td></tr>
+              <tr><td>Priority</td><td>Higher</td><td>Lower</td></tr>
+              <tr><td>Use for</td><td>Emit events after constructor</td><td>Break up CPU work safely</td></tr>
+              <tr><td>Risk</td><td>Can starve I/O if recursive</td><td>Safe for recursion</td></tr>
+            </table></div>
+          </div>
+          <button class="mark-done-btn" onclick="markDone('node-1', 'node', 7)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-node-2">
+        <div class="topic-header" onclick="toggleTopic('node-2')">
+          <div class="topic-num" id="num-node-2">2</div>
+          <div class="topic-title">Streams — Readable, Writable, Transform</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span><span class="badge badge-practical">Practical</span></div>
+          <div class="topic-toggle" id="toggle-node-2">▼</div>
+        </div>
+        <div class="topic-body" id="body-node-2">
+          <div class="explanation">Streams process data in chunks. Instead of loading a 1GB file into memory, you process it piece by piece.</div>
+          <pre>const fs = require('fs');
+const zlib = require('zlib');
+
+// Without streams — loads ENTIRE file into memory ❌
+const data = fs.readFileSync('huge.csv'); // 1GB in RAM!
+
+// With streams — memory efficient ✅
+fs.createReadStream('huge.csv')
+  .pipe(zlib.createGzip())          // transform: compress
+  .pipe(fs.createWriteStream('huge.csv.gz'));  // write
+
+// HTTP response streaming
+app.get('/file', (req, res) => {
+  res.setHeader('Content-Type', 'text/csv');
+  fs.createReadStream('data.csv').pipe(res);
+});</pre>
+          <div class="tip">Backpressure: if consumer is slower than producer, use stream.pause() and resume on 'drain' event. Node's pipe() handles this automatically.</div>
+          <button class="mark-done-btn" onclick="markDone('node-2', 'node', 7)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-node-3">
+        <div class="topic-header" onclick="toggleTopic('node-3')">
+          <div class="topic-num" id="num-node-3">3</div>
+          <div class="topic-title">Worker Threads & Child Processes</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-node-3">▼</div>
+        </div>
+        <div class="topic-body" id="body-node-3">
+          <pre>// Worker Threads — for CPU-heavy tasks (same process, separate thread)
+const { Worker, isMainThread, parentPort } = require('worker_threads');
+
+if (isMainThread) {
+  const worker = new Worker(__filename);
+  worker.on('message', result => console.log('Result:', result));
+  worker.postMessage({ data: heavyPayload });
+} else {
+  parentPort.on('message', ({ data }) => {
+    const result = expensiveCPUWork(data); // runs in separate thread
+    parentPort.postMessage(result);
+  });
+}
+
+// Child Process — for running separate scripts/binaries
+const { exec, spawn } = require('child_process');
+exec('ls -la', (err, stdout) => console.log(stdout));
+
+// Use spawn for streaming large output
+const child = spawn('python3', ['script.py']);</pre>
+          <div class="table-wrap"><table>
+            <tr><th></th><th>Worker Threads</th><th>Child Process</th></tr>
+            <tr><td>Memory</td><td>Shared (SharedArrayBuffer)</td><td>Separate</td></tr>
+            <tr><td>Use for</td><td>CPU tasks in JS</td><td>Running other programs</td></tr>
+            <tr><td>Overhead</td><td>Low</td><td>High</td></tr>
+          </table></div>
+          <button class="mark-done-btn" onclick="markDone('node-3', 'node', 7)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-node-4">
+        <div class="topic-header" onclick="toggleTopic('node-4')">
+          <div class="topic-num" id="num-node-4">4</div>
+          <div class="topic-title">Clustering & PM2 for Production</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-node-4">▼</div>
+        </div>
+        <div class="topic-body" id="body-node-4">
+          <pre>// Node is single-threaded — cluster uses all CPU cores
+const cluster = require('cluster');
+const os = require('os');
+
+if (cluster.isMaster) {
+  const cpuCount = os.cpus().length; // e.g. 8 cores
+  for (let i = 0; i &lt; cpuCount; i++) {
+    cluster.fork(); // spawn 8 workers
+  }
+  cluster.on('exit', (worker) => {
+    cluster.fork(); // auto-restart crashed worker
+  });
+} else {
+  require('./server'); // each worker runs the server
+}
+
+// PM2 (easier, production-ready)
+// pm2 start app.js -i max   → auto-detect CPU count
+// pm2 restart app           → zero-downtime reload
+// pm2 logs / pm2 monit      → monitoring</pre>
+          <div class="gotcha">Workers don't share memory. Don't use in-memory sessions — use Redis instead.</div>
+          <button class="mark-done-btn" onclick="markDone('node-4', 'node', 7)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-node-5">
+        <div class="topic-header" onclick="toggleTopic('node-5')">
+          <div class="topic-num" id="num-node-5">5</div>
+          <div class="topic-title">Memory Leaks — Detection & Prevention</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-node-5">▼</div>
+        </div>
+        <div class="topic-body" id="body-node-5">
+          <div class="content-block">
+            <div class="block-title">Common Causes</div>
+            <div class="key-points">
+              <div class="kp"><span class="kp-icon">→</span>Unbounded caches (Maps/arrays that only grow)</div>
+              <div class="kp"><span class="kp-icon">→</span>Event listeners not removed (EventEmitter leaks)</div>
+              <div class="kp"><span class="kp-icon">→</span>Closures holding large objects longer than needed</div>
+              <div class="kp"><span class="kp-icon">→</span>Global variables accumulating data</div>
+              <div class="kp"><span class="kp-icon">→</span>Timers (setInterval) never cleared</div>
+            </div>
+          </div>
+          <pre>// Fix: use WeakMap/WeakRef for caches (GC can collect)
+const cache = new WeakMap(); // entries GC'd when key has no other refs
+
+// Fix: always remove listeners
+emitter.on('data', handler);
+// later:
+emitter.off('data', handler);
+
+// Fix: clear intervals
+const timer = setInterval(fn, 1000);
+// cleanup:
+clearInterval(timer);
+
+// Detection: node --inspect → Chrome DevTools → Memory tab
+// Take heap snapshot before/after suspected leak → compare</pre>
+          <button class="mark-done-btn" onclick="markDone('node-5', 'node', 7)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-node-6">
+        <div class="topic-header" onclick="toggleTopic('node-6')">
+          <div class="topic-num" id="num-node-6">6</div>
+          <div class="topic-title">Graceful Shutdown & Health Checks</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span><span class="badge badge-practical">Practical</span></div>
+          <div class="topic-toggle" id="toggle-node-6">▼</div>
+        </div>
+        <div class="topic-body" id="body-node-6">
+          <pre>// Graceful shutdown — finish in-flight requests before closing
+const server = app.listen(3000);
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    mongoose.connection.close();
+    redisClient.quit();
+    process.exit(0);
+  });
+  // Force exit if not done in 10s
+  setTimeout(() => process.exit(1), 10000);
+});
+
+// Health check endpoint — for load balancers / k8s
+app.get('/health', async (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1;
+  res.status(dbStatus ? 200 : 503).json({
+    status: dbStatus ? 'ok' : 'degraded',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});</pre>
+          <button class="mark-done-btn" onclick="markDone('node-6', 'node', 7)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-node-7">
+        <div class="topic-header" onclick="toggleTopic('node-7')">
+          <div class="topic-num" id="num-node-7">7</div>
+          <div class="topic-title">Environment Config & The 12-Factor App</div>
+          <div class="topic-badges"><span class="badge badge-easy">Easy</span><span class="badge badge-practical">Practical</span></div>
+          <div class="topic-toggle" id="toggle-node-7">▼</div>
+        </div>
+        <div class="topic-body" id="body-node-7">
+          <pre>// Never hardcode config — use environment variables
+// .env file (never commit to git)
+DATABASE_URL=mongodb://localhost:27017/myapp
+JWT_SECRET=supersecretkey
+PORT=3000
+
+// config/index.js
+module.exports = {
+  port: process.env.PORT || 3000,
+  db: process.env.DATABASE_URL,
+  jwtSecret: process.env.JWT_SECRET,
+  isProd: process.env.NODE_ENV === 'production'
+};
+
+// validate on startup — fail fast
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET env variable is required');
+}</pre>
+          <button class="mark-done-btn" onclick="markDone('node-7', 'node', 7)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EXPRESS -->
+  <div id="sec-express" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#1a1000">🚂</div>
+      <div><h2>Express.js</h2><p>Architecture, middleware, error handling & security</p></div>
+    </div>
+    <div class="topic-grid">
+
+      <div class="topic-card" id="card-express-1">
+        <div class="topic-header" onclick="toggleTopic('express-1')">
+          <div class="topic-num" id="num-express-1">1</div>
+          <div class="topic-title">Scalable App Architecture</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-express-1">▼</div>
+        </div>
+        <div class="topic-body" id="body-express-1">
+          <pre>// Folder structure (feature-based, layered)
+src/
+  config/          → db.js, env.js
+  middleware/      → auth.js, errorHandler.js, rateLimiter.js
+  modules/
+    users/
+      user.routes.js     → defines endpoints
+      user.controller.js → handles req/res
+      user.service.js    → business logic
+      user.repository.js → DB queries only
+      user.model.js      → Mongoose schema
+  utils/           → helpers, validators
+  app.js           → express setup, middleware
+  server.js        → starts listening
+
+// Controller only handles HTTP concerns
+async function getUser(req, res, next) {
+  try {
+    const user = await userService.findById(req.params.id);
+    res.json(user);
+  } catch (err) {
+    next(err); // pass to error middleware
+  }
+}</pre>
+          <div class="tip">Keep controllers thin. Business logic belongs in services. DB queries belong in repositories. This makes testing easy — mock the repository, test the service.</div>
+          <button class="mark-done-btn" onclick="markDone('express-1', 'express', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-express-2">
+        <div class="topic-header" onclick="toggleTopic('express-2')">
+          <div class="topic-num" id="num-express-2">2</div>
+          <div class="topic-title">Middleware Chain — Auth & Permissions</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-express-2">▼</div>
+        </div>
+        <div class="topic-body" id="body-express-2">
+          <pre>// Middleware executes in REGISTRATION ORDER
+app.use(rateLimiter);        // 1. throttle requests
+app.use(extractJWT);         // 2. pull token from header
+app.use(verifyJWT);          // 3. verify & decode token
+app.use(attachUser);         // 4. load user from DB
+// route-level:
+router.get('/admin', checkRole('admin'), handler); // 5. role check
+
+// JWT middleware
+function verifyJWT(req, res, next) {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'No token' });
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    next();
+  } catch {
+    res.status(401).json({ error: 'Invalid token' });
+  }
+}
+
+// Role middleware
+function checkRole(...roles) {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role))
+      return res.status(403).json({ error: 'Forbidden' });
+    next();
+  };
+}</pre>
+          <button class="mark-done-btn" onclick="markDone('express-2', 'express', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-express-3">
+        <div class="topic-header" onclick="toggleTopic('express-3')">
+          <div class="topic-num" id="num-express-3">3</div>
+          <div class="topic-title">Error Handling — The Right Way</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-express-3">▼</div>
+        </div>
+        <div class="topic-body" id="body-express-3">
+          <pre>// Custom error class
+class AppError extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+    this.isOperational = true; // vs programmer error
+  }
+}
+
+// asyncHandler wrapper — no more try/catch in every controller
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+
+// Usage
+router.get('/user/:id', asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) throw new AppError('User not found', 404);
+  res.json(user);
+}));
+
+// Global error middleware — MUST have 4 params
+app.use((err, req, res, next) => {
+  const status = err.statusCode || 500;
+  const message = err.isOperational ? err.message : 'Internal Server Error';
+
+  if (process.env.NODE_ENV !== 'production') {
+    console.error(err.stack); // full stack in dev
+  }
+
+  res.status(status).json({ error: message });
+});</pre>
+          <button class="mark-done-btn" onclick="markDone('express-3', 'express', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-express-4">
+        <div class="topic-header" onclick="toggleTopic('express-4')">
+          <div class="topic-num" id="num-express-4">4</div>
+          <div class="topic-title">Input Validation & Sanitization</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-express-4">▼</div>
+        </div>
+        <div class="topic-body" id="body-express-4">
+          <pre>// Using Joi or Zod for schema validation
+const Joi = require('joi');
+
+const userSchema = Joi.object({
+  name: Joi.string().min(2).max(50).required(),
+  email: Joi.string().email().required(),
+  age: Joi.number().integer().min(18).max(120)
+});
+
+function validate(schema) {
+  return (req, res, next) => {
+    const { error } = schema.validate(req.body, { abortEarly: false });
+    if (error) {
+      const messages = error.details.map(d => d.message);
+      return res.status(400).json({ errors: messages });
+    }
+    next();
+  };
+}
+
+router.post('/users', validate(userSchema), createUser);
+
+// Also sanitize to prevent NoSQL injection
+const mongoSanitize = require('express-mongo-sanitize');
+app.use(mongoSanitize()); // removes $ and . from input</pre>
+          <button class="mark-done-btn" onclick="markDone('express-4', 'express', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-express-5">
+        <div class="topic-header" onclick="toggleTopic('express-5')">
+          <div class="topic-num" id="num-express-5">5</div>
+          <div class="topic-title">Rate Limiting, CORS & Security Headers</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-express-5">▼</div>
+        </div>
+        <div class="topic-body" id="body-express-5">
+          <pre>const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const cors = require('cors');
+
+// Security headers (XSS, clickjacking, etc.)
+app.use(helmet());
+
+// CORS — allow only trusted origins
+app.use(cors({
+  origin: ['https://myapp.com', 'https://admin.myapp.com'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
+// Rate limiting — prevent brute force
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,                  // 100 requests per window
+  message: 'Too many requests'
+});
+
+app.use('/api/', limiter);
+
+// Stricter on auth routes
+const authLimiter = rateLimit({ windowMs: 60*60*1000, max: 10 });
+app.use('/api/auth', authLimiter);</pre>
+          <button class="mark-done-btn" onclick="markDone('express-5', 'express', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MONGODB -->
+  <div id="sec-mongodb" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#002a12">🍃</div>
+      <div><h2>MongoDB</h2><p>Schema design, aggregation, indexing and transactions</p></div>
+    </div>
+    <div class="topic-grid">
+
+      <div class="topic-card" id="card-mongo-1">
+        <div class="topic-header" onclick="toggleTopic('mongo-1')">
+          <div class="topic-num" id="num-mongo-1">1</div>
+          <div class="topic-title">Schema Design — Embed vs Reference</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-mongo-1">▼</div>
+        </div>
+        <div class="topic-body" id="body-mongo-1">
+          <div class="table-wrap"><table>
+            <tr><th>Strategy</th><th>When to Use</th><th>Example</th></tr>
+            <tr><td>Embed</td><td>Data always accessed together, 1:few relationship, sub-doc rarely changes independently</td><td>User + addresses, Post + tags</td></tr>
+            <tr><td>Reference</td><td>Data accessed independently, 1:many or many:many, sub-doc updated frequently, large arrays</td><td>Post + comments (millions), User + orders</td></tr>
+          </table></div>
+          <pre>// Embedded (good for small, co-accessed data)
+{
+  _id: ObjectId,
+  name: "John",
+  addresses: [           // ✅ always fetched with user
+    { city: "Chennai", zip: "600001" }
+  ]
+}
+
+// Referenced (good for large, independent data)
+// Post document
+{ _id: ObjectId("post1"), title: "My Post", author: ObjectId("user1") }
+
+// Fetch with $lookup (like SQL JOIN)
+db.posts.aggregate([
+  { $lookup: {
+    from: "users",
+    localField: "author",
+    foreignField: "_id",
+    as: "authorDetails"
+  }}
+]);</pre>
+          <div class="gotcha">MongoDB document size limit is 16MB. Never embed unbounded arrays (e.g., comments on a viral post). Use references + pagination instead.</div>
+          <button class="mark-done-btn" onclick="markDone('mongo-1', 'mongo', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-mongo-2">
+        <div class="topic-header" onclick="toggleTopic('mongo-2')">
+          <div class="topic-num" id="num-mongo-2">2</div>
+          <div class="topic-title">Aggregation Pipeline — Full Guide</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-mongo-2">▼</div>
+        </div>
+        <div class="topic-body" id="body-mongo-2">
+          <pre>// Top 5 products by revenue per category
+db.orders.aggregate([
+  // 1. Filter
+  { $match: { status: "completed" } },
+
+  // 2. Flatten array of items
+  { $unwind: "$items" },
+
+  // 3. Join with products collection
+  { $lookup: {
+    from: "products",
+    localField: "items.productId",
+    foreignField: "_id",
+    as: "product"
+  }},
+  { $unwind: "$product" },
+
+  // 4. Group by category + product
+  { $group: {
+    _id: { category: "$product.category", name: "$product.name" },
+    totalRevenue: { $sum: { $multiply: ["$items.qty", "$items.price"] } }
+  }},
+
+  // 5. Sort highest first
+  { $sort: { totalRevenue: -1 } },
+
+  // 6. Group by category, take top 5
+  { $group: {
+    _id: "$_id.category",
+    topProducts: { $push: { name: "$_id.name", revenue: "$totalRevenue" } }
+  }},
+  { $project: { topProducts: { $slice: ["$topProducts", 5] } } }
+]);</pre>
+          <div class="tip">Key stages to memorize: $match (filter), $group (aggregate), $sort, $limit, $lookup (join), $unwind (flatten array), $project (reshape), $facet (multiple pipelines in one).</div>
+          <button class="mark-done-btn" onclick="markDone('mongo-2', 'mongo', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-mongo-3">
+        <div class="topic-header" onclick="toggleTopic('mongo-3')">
+          <div class="topic-num" id="num-mongo-3">3</div>
+          <div class="topic-title">Indexing — Strategy & ESR Rule</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-mongo-3">▼</div>
+        </div>
+        <div class="topic-body" id="body-mongo-3">
+          <pre>// Single field index
+db.users.createIndex({ email: 1 }); // 1=asc, -1=desc
+
+// Compound index — ESR Rule: Equality → Sort → Range
+// Query: find active users, sorted by name, age > 18
+db.users.createIndex({ status: 1, name: 1, age: 1 });
+//                      Equality   Sort    Range
+
+// Text index — for full text search
+db.articles.createIndex({ title: "text", body: "text" });
+db.articles.find({ $text: { $search: "node.js performance" } });
+
+// TTL index — auto-delete after expiry (sessions, OTPs)
+db.sessions.createIndex({ createdAt: 1 }, { expireAfterSeconds: 3600 });
+
+// Analyze a query
+db.users.find({ email: "test@test.com" }).explain("executionStats");
+// Look for: IXSCAN (good) vs COLLSCAN (bad — no index used)</pre>
+          <div class="gotcha">Too many indexes slow down writes. Every write must update all indexes. Only index fields you actually query on.</div>
+          <button class="mark-done-btn" onclick="markDone('mongo-3', 'mongo', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-mongo-4">
+        <div class="topic-header" onclick="toggleTopic('mongo-4')">
+          <div class="topic-num" id="num-mongo-4">4</div>
+          <div class="topic-title">Transactions — ACID in MongoDB</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-mongo-4">▼</div>
+        </div>
+        <div class="topic-body" id="body-mongo-4">
+          <pre>// Multi-document transaction (requires replica set)
+const session = await mongoose.startSession();
+
+try {
+  await session.withTransaction(async () => {
+    // Both operations succeed or both fail (ACID)
+    await Order.create([{ userId, items, total }], { session });
+    await Wallet.updateOne(
+      { userId },
+      { $inc: { balance: -total } },
+      { session }
+    );
+  });
+} finally {
+  await session.endSession();
+}</pre>
+          <div class="table-wrap"><table>
+            <tr><th>Aspect</th><th>Detail</th></tr>
+            <tr><td>Available since</td><td>v4.0 (replica sets), v4.2 (sharded)</td></tr>
+            <tr><td>Performance</td><td>~3x slower than single-doc ops — use sparingly</td></tr>
+            <tr><td>Best practice</td><td>Keep transactions short — &lt;1000ms</td></tr>
+            <tr><td>Alternative</td><td>Design schema to make most ops single-document</td></tr>
+          </table></div>
+          <button class="mark-done-btn" onclick="markDone('mongo-4', 'mongo', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-mongo-5">
+        <div class="topic-header" onclick="toggleTopic('mongo-5')">
+          <div class="topic-num" id="num-mongo-5">5</div>
+          <div class="topic-title">Mongoose — Virtuals, Middleware & Plugins</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-mongo-5">▼</div>
+        </div>
+        <div class="topic-body" id="body-mongo-5">
+          <pre>const userSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
+  password: String,
+  createdAt: { type: Date, default: Date.now }
+});
+
+// Virtual — computed field, not stored in DB
+userSchema.virtual('fullName').get(function() {
+  return `${this.firstName} ${this.lastName}`;
+});
+
+// Pre middleware — runs before save
+userSchema.pre('save', async function(next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 12);
+  }
+  next();
+});
+
+// Instance method
+userSchema.methods.comparePassword = async function(candidate) {
+  return bcrypt.compare(candidate, this.password);
+};
+
+// Static method
+userSchema.statics.findByEmail = function(email) {
+  return this.findOne({ email: email.toLowerCase() });
+};</pre>
+          <button class="mark-done-btn" onclick="markDone('mongo-5', 'mongo', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-mongo-6">
+        <div class="topic-header" onclick="toggleTopic('mongo-6')">
+          <div class="topic-num" id="num-mongo-6">6</div>
+          <div class="topic-title">Pagination — Skip/Limit vs Cursor-based</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-mongo-6">▼</div>
+        </div>
+        <div class="topic-body" id="body-mongo-6">
+          <pre>// ❌ Skip/Limit — gets slow on large collections (skip scans all)
+const page = 100, limit = 20;
+db.posts.find().skip((page-1)*limit).limit(limit);
+// Page 100 = skip 1980 documents — performance degrades!
+
+// ✅ Cursor-based pagination — fast at any page
+// Client sends lastId from previous page
+router.get('/posts', async (req, res) => {
+  const { lastId, limit = 20 } = req.query;
+  const query = lastId ? { _id: { $gt: lastId } } : {};
+  const posts = await Post.find(query)
+    .sort({ _id: 1 })
+    .limit(Number(limit));
+  const nextCursor = posts.length === limit ? posts[posts.length-1]._id : null;
+  res.json({ posts, nextCursor });
+});</pre>
+          <div class="tip">Use skip/limit for admin panels (low traffic, predictable pages). Use cursor-based for public APIs, infinite scroll, and large datasets.</div>
+          <button class="mark-done-btn" onclick="markDone('mongo-6', 'mongo', 6)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AUTH -->
+  <div id="sec-auth" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#1a002e">🔐</div>
+      <div><h2>Auth & Security</h2><p>JWT, refresh tokens, OAuth and security best practices</p></div>
+    </div>
+    <div class="topic-grid">
+      <div class="topic-card" id="card-auth-1">
+        <div class="topic-header" onclick="toggleTopic('auth-1')">
+          <div class="topic-num" id="num-auth-1">1</div>
+          <div class="topic-title">JWT — Access & Refresh Token Strategy</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span><span class="badge badge-practical">Practical</span></div>
+          <div class="topic-toggle" id="toggle-auth-1">▼</div>
+        </div>
+        <div class="topic-body" id="body-auth-1">
+          <pre>// Login — issue both tokens
+async function login(req, res) {
+  const user = await User.findByEmail(req.body.email);
+  if (!user || !await user.comparePassword(req.body.password))
+    throw new AppError('Invalid credentials', 401);
+
+  const accessToken = jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: '15m' }  // short-lived
+  );
+
+  const refreshToken = jwt.sign(
+    { id: user._id },
+    process.env.REFRESH_SECRET,
+    { expiresIn: '7d' }   // long-lived
+  );
+
+  // Store refresh token in httpOnly cookie (XSS safe)
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true, secure: true, sameSite: 'strict',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+
+  res.json({ accessToken });
+}
+
+// Refresh endpoint
+async function refresh(req, res) {
+  const token = req.cookies.refreshToken;
+  if (!token) throw new AppError('No refresh token', 401);
+  const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
+  const newAccessToken = jwt.sign(
+    { id: decoded.id },
+    process.env.JWT_SECRET,
+    { expiresIn: '15m' }
+  );
+  res.json({ accessToken: newAccessToken });
+}</pre>
+          <div class="tip">Never store access tokens in localStorage (XSS vulnerable). Store in memory (JS variable). Store refresh tokens in httpOnly cookies.</div>
+          <button class="mark-done-btn" onclick="markDone('auth-1', 'auth', 4)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-auth-2">
+        <div class="topic-header" onclick="toggleTopic('auth-2')">
+          <div class="topic-num" id="num-auth-2">2</div>
+          <div class="topic-title">Password Hashing & Storage</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-auth-2">▼</div>
+        </div>
+        <div class="topic-body" id="body-auth-2">
+          <pre>const bcrypt = require('bcryptjs');
+
+// Hash on save (in Mongoose pre-save middleware)
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 12); // 12 = cost factor
+  next();
+});
+
+// Never store plain text or MD5/SHA hashes
+// bcrypt is slow by design — makes brute force expensive
+// cost factor 12 = ~300ms per hash (good balance)
+
+// Compare
+const isMatch = await bcrypt.compare(plainPassword, hashedPassword);</pre>
+          <div class="gotcha">Never compare passwords with ==. Always use bcrypt.compare() which handles timing-safe comparison to prevent timing attacks.</div>
+          <button class="mark-done-btn" onclick="markDone('auth-2', 'auth', 4)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-auth-3">
+        <div class="topic-header" onclick="toggleTopic('auth-3')">
+          <div class="topic-num" id="num-auth-3">3</div>
+          <div class="topic-title">Common Security Vulnerabilities (OWASP)</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-auth-3">▼</div>
+        </div>
+        <div class="topic-body" id="body-auth-3">
+          <div class="table-wrap"><table>
+            <tr><th>Attack</th><th>How it works</th><th>Prevention</th></tr>
+            <tr><td>NoSQL Injection</td><td>Send {$gt: ""} as email to bypass login</td><td>express-mongo-sanitize, Joi validation</td></tr>
+            <tr><td>XSS</td><td>Inject script tags into stored data</td><td>helmet, escape output, CSP headers</td></tr>
+            <tr><td>CSRF</td><td>Trick user's browser to make requests</td><td>SameSite cookies, CSRF tokens</td></tr>
+            <tr><td>Brute Force</td><td>Try thousands of passwords</td><td>Rate limiting, account lockout</td></tr>
+            <tr><td>Mass Assignment</td><td>POST {role: "admin"} to elevate privileges</td><td>Whitelist allowed fields explicitly</td></tr>
+          </table></div>
+          <pre>// Mass assignment prevention
+const allowedFields = ['name', 'email', 'password'];
+const sanitized = Object.fromEntries(
+  Object.entries(req.body).filter(([k]) => allowedFields.includes(k))
+);</pre>
+          <button class="mark-done-btn" onclick="markDone('auth-3', 'auth', 4)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-auth-4">
+        <div class="topic-header" onclick="toggleTopic('auth-4')">
+          <div class="topic-num" id="num-auth-4">4</div>
+          <div class="topic-title">Role-Based Access Control (RBAC)</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-auth-4">▼</div>
+        </div>
+        <div class="topic-body" id="body-auth-4">
+          <pre>// Define roles and permissions
+const permissions = {
+  admin:   ['read', 'write', 'delete', 'manage_users'],
+  editor:  ['read', 'write'],
+  viewer:  ['read']
+};
+
+// Middleware
+function requirePermission(permission) {
+  return (req, res, next) => {
+    const userPerms = permissions[req.user.role] || [];
+    if (!userPerms.includes(permission))
+      return res.status(403).json({ error: 'Insufficient permissions' });
+    next();
+  };
+}
+
+// Routes
+router.delete('/posts/:id', requirePermission('delete'), deletePost);
+router.get('/users', requirePermission('manage_users'), getUsers);</pre>
+          <button class="mark-done-btn" onclick="markDone('auth-4', 'auth', 4)">✓ Mark as Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEM DESIGN -->
+  <div id="sec-system" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#1a0a2e">🏗️</div>
+      <div><h2>System Design</h2><p>Real-time systems, scalability patterns and architecture</p></div>
+    </div>
+    <div class="topic-grid">
+      <div class="topic-card" id="card-system-1">
+        <div class="topic-header" onclick="toggleTopic('system-1')">
+          <div class="topic-num" id="num-system-1">1</div>
+          <div class="topic-title">Real-time with Socket.io & Redis Pub/Sub</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-system-1">▼</div>
+        </div>
+        <div class="topic-body" id="body-system-1">
+          <pre>// Server
+const io = require('socket.io')(server);
+const redisAdapter = require('@socket.io/redis-adapter');
+
+// Scale across multiple servers with Redis
+const pubClient = createClient({ url: process.env.REDIS_URL });
+const subClient = pubClient.duplicate();
+io.adapter(redisAdapter(pubClient, subClient));
+
+io.on('connection', (socket) => {
+  socket.on('join-room', (roomId) => socket.join(roomId));
+  socket.on('send-message', ({ roomId, message }) => {
+    // Broadcasts to all in room, including other servers via Redis
+    io.to(roomId).emit('new-message', message);
+  });
+  socket.on('disconnect', () => { /* cleanup */ });
+});
+
+// Client (React)
+const socket = io('https://api.myapp.com');
+socket.emit('join-room', roomId);
+socket.on('new-message', (msg) => setMessages(prev => [...prev, msg]));</pre>
+          <div class="tip">Without Redis adapter, Socket.io only broadcasts to clients on the SAME server. Redis pub/sub bridges multiple Node instances.</div>
+          <button class="mark-done-btn" onclick="markDone('system-1', 'system', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-system-2">
+        <div class="topic-header" onclick="toggleTopic('system-2')">
+          <div class="topic-num" id="num-system-2">2</div>
+          <div class="topic-title">Background Jobs with BullMQ</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-system-2">▼</div>
+        </div>
+        <div class="topic-body" id="body-system-2">
+          <pre>const { Queue, Worker } = require('bullmq');
+const connection = { host: 'localhost', port: 6379 };
+
+// Producer — add jobs to queue
+const emailQueue = new Queue('emails', { connection });
+
+async function sendWelcomeEmail(userId) {
+  await emailQueue.add('welcome', { userId }, {
+    attempts: 3,          // retry up to 3 times on failure
+    backoff: { type: 'exponential', delay: 1000 }
+  });
+}
+
+// Consumer — process jobs
+const worker = new Worker('emails', async (job) => {
+  const user = await User.findById(job.data.userId);
+  await sendEmail(user.email, 'Welcome!', welcomeTemplate(user));
+}, { connection });
+
+worker.on('failed', (job, err) => {
+  console.error(`Job ${job.id} failed:`, err);
+});</pre>
+          <div class="tip">Use queues for: email sending, image processing, PDF generation, notifications, webhooks — anything that can be async and retried.</div>
+          <button class="mark-done-btn" onclick="markDone('system-2', 'system', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-system-3">
+        <div class="topic-header" onclick="toggleTopic('system-3')">
+          <div class="topic-num" id="num-system-3">3</div>
+          <div class="topic-title">Caching Strategy with Redis</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-system-3">▼</div>
+        </div>
+        <div class="topic-body" id="body-system-3">
+          <pre>// Cache-Aside Pattern (most common)
+async function getUser(id) {
+  const cacheKey = `user:${id}`;
+
+  // 1. Check cache first
+  const cached = await redis.get(cacheKey);
+  if (cached) return JSON.parse(cached);
+
+  // 2. Cache miss — fetch from DB
+  const user = await User.findById(id);
+  if (!user) throw new AppError('Not found', 404);
+
+  // 3. Store in cache with TTL
+  await redis.setex(cacheKey, 3600, JSON.stringify(user)); // 1 hour
+
+  return user;
+}
+
+// Invalidate cache on update
+async function updateUser(id, data) {
+  const user = await User.findByIdAndUpdate(id, data, { new: true });
+  await redis.del(`user:${id}`); // 🔑 always invalidate after write
+  return user;
+}</pre>
+          <div class="table-wrap"><table>
+            <tr><th>Pattern</th><th>Use for</th></tr>
+            <tr><td>Cache-Aside</td><td>General purpose, read-heavy data</td></tr>
+            <tr><td>Write-Through</td><td>Data that must be consistent</td></tr>
+            <tr><td>TTL-based</td><td>Data that changes but not critical to be real-time</td></tr>
+          </table></div>
+          <button class="mark-done-btn" onclick="markDone('system-3', 'system', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-system-4">
+        <div class="topic-header" onclick="toggleTopic('system-4')">
+          <div class="topic-num" id="num-system-4">4</div>
+          <div class="topic-title">API Design Best Practices</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-system-4">▼</div>
+        </div>
+        <div class="topic-body" id="body-system-4">
+          <pre>// RESTful conventions
+GET    /api/v1/posts          → list posts
+POST   /api/v1/posts          → create post
+GET    /api/v1/posts/:id      → get single post
+PUT    /api/v1/posts/:id      → replace post
+PATCH  /api/v1/posts/:id      → partial update
+DELETE /api/v1/posts/:id      → delete post
+
+// Consistent response envelope
+{
+  "success": true,
+  "data": { ... },
+  "meta": { "page": 1, "total": 245, "limit": 20 }
+}
+
+// Error response
+{
+  "success": false,
+  "error": "User not found",
+  "code": "USER_NOT_FOUND"  // machine-readable code for client
+}
+
+// Versioning — always version your API
+app.use('/api/v1', v1Router);
+app.use('/api/v2', v2Router);</pre>
+          <button class="mark-done-btn" onclick="markDone('system-4', 'system', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-system-5">
+        <div class="topic-header" onclick="toggleTopic('system-5')">
+          <div class="topic-num" id="num-system-5">5</div>
+          <div class="topic-title">Microservices vs Monolith — When & How</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-system-5">▼</div>
+        </div>
+        <div class="topic-body" id="body-system-5">
+          <div class="table-wrap"><table>
+            <tr><th></th><th>Monolith</th><th>Microservices</th></tr>
+            <tr><td>Start with</td><td>✅ Yes — simpler, faster</td><td>❌ Premature complexity</td></tr>
+            <tr><td>Scale to</td><td>Works up to medium traffic</td><td>Independent scaling per service</td></tr>
+            <tr><td>Deploy</td><td>All-or-nothing</td><td>Independent deployments</td></tr>
+            <tr><td>Debug</td><td>Easy — one codebase</td><td>Hard — distributed tracing needed</td></tr>
+            <tr><td>Use when</td><td>Team &lt; 10, early stage</td><td>Team &gt; 20, distinct bounded contexts</td></tr>
+          </table></div>
+          <div class="tip">Start as a well-structured monolith. Extract services only when a specific part needs independent scaling or has a separate release cycle. "Modular monolith" is often the sweet spot.</div>
+          <button class="mark-done-btn" onclick="markDone('system-5', 'system', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERFORMANCE -->
+  <div id="sec-perf" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#1a0800">⚡</div>
+      <div><h2>Performance & DevOps</h2><p>Monitoring, CI/CD, Docker and production readiness</p></div>
+    </div>
+    <div class="topic-grid">
+      <div class="topic-card" id="card-perf-1">
+        <div class="topic-header" onclick="toggleTopic('perf-1')">
+          <div class="topic-num" id="num-perf-1">1</div>
+          <div class="topic-title">Logging & Monitoring (Winston + Sentry)</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-perf-1">▼</div>
+        </div>
+        <div class="topic-body" id="body-perf-1">
+          <pre>const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()  // structured logs for log aggregators
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'error.log', level: 'error' })
+  ]
+});
+
+// Request logging middleware
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    logger.info({
+      method: req.method, url: req.url,
+      status: res.statusCode, duration: Date.now() - start,
+      userId: req.user?.id
+    });
+  });
+  next();
+});</pre>
+          <button class="mark-done-btn" onclick="markDone('perf-1', 'perf', 4)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-perf-2">
+        <div class="topic-header" onclick="toggleTopic('perf-2')">
+          <div class="topic-num" id="num-perf-2">2</div>
+          <div class="topic-title">Docker for MERN Stack</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-perf-2">▼</div>
+        </div>
+        <div class="topic-body" id="body-perf-2">
+          <pre># Dockerfile (Node backend)
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production  # faster, exact versions
+COPY . .
+EXPOSE 3000
+USER node  # don't run as root!
+CMD ["node", "server.js"]
+
+# docker-compose.yml
+version: '3.8'
+services:
+  app:
+    build: .
+    ports: ["3000:3000"]
+    environment:
+      - DATABASE_URL=mongodb://mongo:27017/myapp
+    depends_on: [mongo, redis]
+
+  mongo:
+    image: mongo:7
+    volumes: [mongo_data:/data/db]
+
+  redis:
+    image: redis:7-alpine
+
+volumes:
+  mongo_data:</pre>
+          <button class="mark-done-btn" onclick="markDone('perf-2', 'perf', 4)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-perf-3">
+        <div class="topic-header" onclick="toggleTopic('perf-3')">
+          <div class="topic-num" id="num-perf-3">3</div>
+          <div class="topic-title">CI/CD Pipeline Basics</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-perf-3">▼</div>
+        </div>
+        <div class="topic-body" id="body-perf-3">
+          <pre># .github/workflows/deploy.yml
+name: CI/CD
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with: { node-version: '20' }
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build & push Docker image
+        run: |
+          docker build -t myapp:$GITHUB_SHA .
+          docker push registry/myapp:$GITHUB_SHA
+      - name: Deploy to server
+        run: ssh deploy@server 'docker pull && docker-compose up -d'</pre>
+          <button class="mark-done-btn" onclick="markDone('perf-3', 'perf', 4)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-perf-4">
+        <div class="topic-header" onclick="toggleTopic('perf-4')">
+          <div class="topic-num" id="num-perf-4">4</div>
+          <div class="topic-title">Testing Strategy — Unit, Integration, E2E</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-perf-4">▼</div>
+        </div>
+        <div class="topic-body" id="body-perf-4">
+          <div class="table-wrap"><table>
+            <tr><th>Type</th><th>Tool</th><th>Tests</th><th>Speed</th></tr>
+            <tr><td>Unit</td><td>Jest / Vitest</td><td>Functions, utils, services in isolation</td><td>Fast</td></tr>
+            <tr><td>Integration</td><td>Jest + Supertest</td><td>API endpoints with real DB</td><td>Medium</td></tr>
+            <tr><td>E2E</td><td>Cypress / Playwright</td><td>Full user flows in browser</td><td>Slow</td></tr>
+          </table></div>
+          <pre>// Integration test with Supertest
+const request = require('supertest');
+const app = require('../app');
+
+describe('POST /api/auth/login', () => {
+  it('should return token for valid credentials', async () => {
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'test@test.com', password: 'password123' });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('accessToken');
+  });
+
+  it('should return 401 for invalid credentials', async () => {
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'test@test.com', password: 'wrong' });
+    expect(res.statusCode).toBe(401);
+  });
+});</pre>
+          <button class="mark-done-btn" onclick="markDone('perf-4', 'perf', 4)">✓ Mark as Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DSA -->
+  <div id="sec-dsa" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#1a0020">🧠</div>
+      <div><h2>DSA for Interviews</h2><p>The algorithms and patterns you'll actually be asked</p></div>
+    </div>
+    <div class="topic-grid">
+      <div class="topic-card" id="card-dsa-1">
+        <div class="topic-header" onclick="toggleTopic('dsa-1')">
+          <div class="topic-num" id="num-dsa-1">1</div>
+          <div class="topic-title">Array & String Patterns</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-dsa-1">▼</div>
+        </div>
+        <div class="topic-body" id="body-dsa-1">
+          <pre>// Two Pointer — O(n) instead of O(n²)
+function twoSum(arr, target) {
+  let left = 0, right = arr.length - 1;
+  while (left < right) {
+    const sum = arr[left] + arr[right];
+    if (sum === target) return [left, right];
+    else if (sum < target) left++;
+    else right--;
+  }
+}
+
+// Sliding Window — max sum subarray of size k
+function maxSumSubarray(arr, k) {
+  let sum = arr.slice(0, k).reduce((a, b) => a + b, 0);
+  let max = sum;
+  for (let i = k; i < arr.length; i++) {
+    sum += arr[i] - arr[i - k]; // slide: add new, remove old
+    max = Math.max(max, sum);
+  }
+  return max;
+}
+
+// Frequency Map — O(n) duplicate/count problems
+function firstNonRepeating(str) {
+  const freq = {};
+  for (const c of str) freq[c] = (freq[c] || 0) + 1;
+  return str.split('').find(c => freq[c] === 1) || null;
+}</pre>
+          <button class="mark-done-btn" onclick="markDone('dsa-1', 'dsa', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-dsa-2">
+        <div class="topic-header" onclick="toggleTopic('dsa-2')">
+          <div class="topic-num" id="num-dsa-2">2</div>
+          <div class="topic-title">Recursion & Tree Traversal</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-dsa-2">▼</div>
+        </div>
+        <div class="topic-body" id="body-dsa-2">
+          <pre>// Flatten nested object (common in MERN — API data)
+function flatten(obj, prefix = '', result = {}) {
+  for (const [key, val] of Object.entries(obj)) {
+    const newKey = prefix ? `${prefix}.${key}` : key;
+    if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+      flatten(val, newKey, result);
+    } else {
+      result[newKey] = val;
+    }
+  }
+  return result;
+}
+
+flatten({ a: { b: { c: 1 } }, d: 2 });
+// → { 'a.b.c': 1, 'd': 2 }
+
+// Deep clone without JSON.parse (handles functions, dates)
+function deepClone(obj) {
+  if (obj === null || typeof obj !== 'object') return obj;
+  if (obj instanceof Date) return new Date(obj);
+  if (Array.isArray(obj)) return obj.map(deepClone);
+  return Object.fromEntries(
+    Object.entries(obj).map(([k, v]) => [k, deepClone(v)])
+  );
+}</pre>
+          <button class="mark-done-btn" onclick="markDone('dsa-2', 'dsa', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-dsa-3">
+        <div class="topic-header" onclick="toggleTopic('dsa-3')">
+          <div class="topic-num" id="num-dsa-3">3</div>
+          <div class="topic-title">Implement Debounce & Throttle from Scratch</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-dsa-3">▼</div>
+        </div>
+        <div class="topic-body" id="body-dsa-3">
+          <pre>// Debounce
+function debounce(fn, delay) {
+  let timer = null;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+      timer = null;
+    }, delay);
+  };
+}
+
+// Throttle
+function throttle(fn, limit) {
+  let inThrottle = false;
+  return function(...args) {
+    if (!inThrottle) {
+      fn.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+// Memoize
+function memoize(fn) {
+  const cache = new Map();
+  return function(...args) {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key);
+    const result = fn.apply(this, args);
+    cache.set(key, result);
+    return result;
+  };
+}</pre>
+          <button class="mark-done-btn" onclick="markDone('dsa-3', 'dsa', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-dsa-4">
+        <div class="topic-header" onclick="toggleTopic('dsa-4')">
+          <div class="topic-num" id="num-dsa-4">4</div>
+          <div class="topic-title">Sorting & Searching</div>
+          <div class="topic-badges"><span class="badge badge-medium">Medium</span></div>
+          <div class="topic-toggle" id="toggle-dsa-4">▼</div>
+        </div>
+        <div class="topic-body" id="body-dsa-4">
+          <pre>// Binary search — O(log n) on sorted arrays
+function binarySearch(arr, target) {
+  let left = 0, right = arr.length - 1;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (arr[mid] === target) return mid;
+    else if (arr[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+  return -1;
+}
+
+// Sort objects by multiple fields
+const users = [{ name: 'B', age: 25 }, { name: 'A', age: 30 }, { name: 'A', age: 20 }];
+users.sort((a, b) => a.name.localeCompare(b.name) || a.age - b.age);
+// → [{name:'A',age:20}, {name:'A',age:30}, {name:'B',age:25}]</pre>
+          <div class="table-wrap"><table>
+            <tr><th>Algorithm</th><th>Time</th><th>When to use</th></tr>
+            <tr><td>Array.sort()</td><td>O(n log n)</td><td>General purpose — always try this first</td></tr>
+            <tr><td>Binary Search</td><td>O(log n)</td><td>Sorted arrays — finding element fast</td></tr>
+            <tr><td>Hash Map lookup</td><td>O(1)</td><td>Frequency counts, deduplication</td></tr>
+          </table></div>
+          <button class="mark-done-btn" onclick="markDone('dsa-4', 'dsa', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+
+      <div class="topic-card" id="card-dsa-5">
+        <div class="topic-header" onclick="toggleTopic('dsa-5')">
+          <div class="topic-num" id="num-dsa-5">5</div>
+          <div class="topic-title">Implement a Rate Limiter from Scratch</div>
+          <div class="topic-badges"><span class="badge badge-hard">Hard</span></div>
+          <div class="topic-toggle" id="toggle-dsa-5">▼</div>
+        </div>
+        <div class="topic-body" id="body-dsa-5">
+          <pre>// Sliding Window Rate Limiter (in-memory)
+class RateLimiter {
+  constructor(maxRequests, windowMs) {
+    this.maxRequests = maxRequests;
+    this.windowMs = windowMs;
+    this.clients = new Map(); // ip → [timestamps]
+  }
+
+  isAllowed(clientId) {
+    const now = Date.now();
+    const windowStart = now - this.windowMs;
+
+    if (!this.clients.has(clientId)) {
+      this.clients.set(clientId, []);
+    }
+
+    // Remove timestamps outside the window
+    const requests = this.clients.get(clientId)
+      .filter(ts => ts > windowStart);
+
+    if (requests.length >= this.maxRequests) {
+      this.clients.set(clientId, requests);
+      return false; // rate limited
+    }
+
+    requests.push(now);
+    this.clients.set(clientId, requests);
+    return true;
+  }
+}
+
+const limiter = new RateLimiter(100, 60 * 1000); // 100 req/min
+app.use((req, res, next) => {
+  if (!limiter.isAllowed(req.ip))
+    return res.status(429).json({ error: 'Too many requests' });
+  next();
+});</pre>
+          <button class="mark-done-btn" onclick="markDone('dsa-5', 'dsa', 5)">✓ Mark as Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+// Progress tracking
+const progress = JSON.parse(localStorage.getItem('mernProgress') || '{}');
+const totals = { js: 6, react: 8, node: 7, express: 5, mongo: 6, auth: 4, system: 5, perf: 4, dsa: 5 };
+
+function markDone(topicId, section, total) {
+  const btn = document.querySelector(`#card-${topicId} .mark-done-btn`);
+  const num = document.getElementById(`num-${topicId}`);
+
+  if (progress[topicId]) {
+    delete progress[topicId];
+    btn.textContent = '✓ Mark as Done';
+    btn.classList.remove('done-btn');
+    num.classList.remove('done');
+  } else {
+    progress[topicId] = true;
+    btn.textContent = '✅ Completed';
+    btn.classList.add('done-btn');
+    num.classList.add('done');
+  }
+
+  localStorage.setItem('mernProgress', JSON.stringify(progress));
+  updateProgress();
+}
+
+function updateProgress() {
+  let totalDone = 0;
+  let totalAll = 0;
+
+  for (const [sec, total] of Object.entries(totals)) {
+    const done = Object.keys(progress).filter(k => k.startsWith(sec + '-')).length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    totalDone += done;
+    totalAll += total;
+
+    document.getElementById(`bar-${sec}`).style.width = pct + '%';
+    document.getElementById(`pct-${sec}`).textContent = pct + '%';
+
+    const progEl = document.getElementById(`prog-${sec}`);
+    if (progEl) progEl.textContent = `${done}/${total}`;
+  }
+
+  const overallPct = totalAll > 0 ? Math.round((totalDone / totalAll) * 100) : 0;
+  document.getElementById('overallPct').textContent = overallPct + '% complete';
+  document.getElementById('doneCount').textContent = totalDone;
+}
+
+function restoreProgress() {
+  for (const topicId of Object.keys(progress)) {
+    const btn = document.querySelector(`#card-${topicId} .mark-done-btn`);
+    const num = document.getElementById(`num-${topicId}`);
+    if (btn) { btn.textContent = '✅ Completed'; btn.classList.add('done-btn'); }
+    if (num) num.classList.add('done');
+  }
+  updateProgress();
+}
+
+function showSection(name, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function toggleTopic(id) {
+  const body = document.getElementById('body-' + id);
+  const toggle = document.getElementById('toggle-' + id);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  toggle.classList.toggle('open', !isOpen);
+}
+
+restoreProgress();
+</script>
+</body>
+</html>
